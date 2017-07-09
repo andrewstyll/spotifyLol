@@ -4,7 +4,6 @@ const summonerSearch = require('./summonerSearch');
 const summoner = require('./summoner');
 const moodAI = require('./moodAI');
 
-
 routes.get('/summonerSearch', summonerSearch);
 routes.get('/summonerSearch/:summonerName', summoner);
 routes.get('/moodAI', moodAI);
