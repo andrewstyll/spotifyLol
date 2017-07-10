@@ -3,9 +3,10 @@
 // to use, add an API key.js file containing an API key to /spotifyLol/server/riotAPIWrapper and export the key. It will be added here
 const KEY = require('./key');
 
-const API_POSTFIX = '?api_key='+ KEY;
+const API_POSTFIX = '/?api_key='+ KEY.DEV_KEY;
 
-const HOST_BASE = '.api.riotgames.com';
+const HTTPS_HEAD = 'https://';
+const HOST = '.api.riotgames.com';
 
 // I might want to extend this to other regions, but currently only really want for this to work in NA
 const REGION = {
@@ -22,10 +23,12 @@ const REGION = {
     RUSSIA: 'RU',
 };
 
-const API_CALL_BASE = {
-    SUMMONER_BY_NAME: '/lol/summoner/v3/summoners/by-name/',
-    MATCH_BY_ACC_ID: '/lol/match/v3/matchlists/by-account/', // also reused for recent matches
-    MATCH_BY_MATCH_ID: '/lol/match/v3/matches/',
+const API_CALL = {
+    SUMMONER_BY_NAME: '/lol/summoner/v3/summoners/by-name/', // {summonerName}
+    
+    // also reused for recent matches. needs a recent appended for recent matched after accountID
+    MATCH_BY_ACC_ID: '/lol/match/v3/matchlists/by-account/', //{accountID} /recent
+    MATCH_BY_MATCH_ID: '/lol/match/v3/matches/', //{match-ID}
     
     // STATIC CALLS
     PROFILE_ICONS: '/lol/static-data/v3/profile-icons',
@@ -33,8 +36,9 @@ const API_CALL_BASE = {
 };
 
 module.exports = {
-    API_POSTFIX
-    HOST_BASE,
+    HTTPS_HEAD,
+    API_POSTFIX,
+    HOST,
     REGION,
-    API_CALL_BASE,
+    API_CALL,
 };
