@@ -1,5 +1,4 @@
 ERROR_CODES = {
-    200: 'Success :D',
     400: 'Bad Request => Syntax error in request',
     401: 'Unauthorized',
     403: 'Forbidden => There is likely and issue with the API key',

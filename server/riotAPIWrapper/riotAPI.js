@@ -7,9 +7,10 @@ const API = CONST.API_CALL; //API_CALL object
 
 let riotAPI = {};
 
-/* returns return of api call for summoner info, call made by summoner name
+/* callback invoked after api call for summoner info, call made by summoner name
  * @param {string} summName: string contaning summoner name 
- * @return {Object}: returns an object containing summoner data
+ * @param {function} callBack: function to be executed on return of data
+ * @callback {Object}: passes an object containing summoner data or error data
  */
 riotAPI.getSummonerInfoByName = function(summName, callBack, region = CONST.REGION.NA) {
     
@@ -20,13 +21,15 @@ riotAPI.getSummonerInfoByName = function(summName, callBack, region = CONST.REGI
     utils.makeRequest(url, callBack);
 }
 
-/* returns return of api call for match history, call made by summoner accountID
- * @param {string} accountID: string contaning summoner account ID 
+/* callback invoked after api call for match history, call made by summoner accountID
+ * @param {long} accountID: long int contaning summoner account ID 
  * @param {bool} recent: boolean determining if we want just last 20 games or not
  * @param {function} callBack: function to be executed on return of data
- * @return {Object}: returns an object containing matchHistory data
+ * @callback {Object}: passes an object containing match history data or error data
  */
+//TODO::need to implement options for queries :D
 riotAPI.getMatchHistory = function(accountID, recent, callBack, region = CONST.REGION.NA) {
+    
     let matchHistoryTag;
     if(recent) {
         matchHistoryTag = '/recent' 
@@ -40,6 +43,31 @@ riotAPI.getMatchHistory = function(accountID, recent, callBack, region = CONST.R
     
     // now make a request
     utils.makeRequest(url, callBack);
+}
+
+/* callback invoked after api call for match data, call made by matchID
+ * @param {long} matchID: long int contaning match ID 
+ * @param {function} callBack: function to be executed on return of data
+ * @callback {Object}: passes an object containing match data or error data
+ */
+riotAPI.getMatchData = function(matchID, callBack, region = CONST.REGION.NA) {
+    
+    let apiRequest = API.MATCH_BY_MATCH_ID + matchID;
+
+    let url = utils.makeURL(region, apiRequest);
+    
+    // now make a request
+    utils.makeRequest(url, callBack);
+}
+
+//TODO::need to implement options for queries :D
+riotAPI.getProfileIcons = function(callBack, region = CONST.REGION.NA) {
+    let apiRequest = API.PROFILE_ICONS;
+}
+
+//TODO::need to implement options for queries :D
+riotAPI.getChampionInfo = function(callBack, region = CONST.REGION.NA) {
+    let apiRequest = API.CHAMP_LIST;
 }
 
 module.exports = riotAPI;

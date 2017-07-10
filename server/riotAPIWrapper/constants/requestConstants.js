@@ -35,10 +35,17 @@ const API_CALL = {
     CHAMP_LIST: '/lol/static-data/v3/champions'
 };
 
+// This will contain a list of all of the queues that return match data containing summoner info with the purpose of
+// assigning a winning percentage on a champion to the summoner
+const MM_Q = {
+
+};
+
 module.exports = {
     HTTPS_HEAD,
     API_POSTFIX,
     HOST,
     REGION,
     API_CALL,
+    MM_Q
 };

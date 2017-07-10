@@ -10,6 +10,7 @@ utils = {};
 
 /* makes a http request at given URL
  * @param {string} url: url of request
+ * @param {function} callBack: function to be executed on return of data
  * @return {Object}: returns object containing either an error status code OR the requested info
  */
 utils.makeRequest = function(url, callBack){
@@ -22,15 +23,12 @@ utils.makeRequest = function(url, callBack){
         let statusCode = response.statusCode;
 
         if(statusCode != 200) {
-            console.log('HI');
             if(ERROR_CODES.hasOwnProperty(statusCode)) {
                 callBack({errorResponse: statusCode, message: ERROR_CODES[statusCode]}, null);
             } else {
-                console.log('UNKNOWN ERROR');
                 callBack({errorResponse: statusCode, message: 'ERROR'}, null);
             }
         } else { 
-            console.log('WORKING');
             callBack(null, JSON.parse(body));
         }
     });
@@ -41,7 +39,7 @@ utils.makeRequest = function(url, callBack){
  * @param {string} apiRequest: api request, contains optiions
  * @return {string}: returns string containing URL
  */
-utils.makeURL = function(region, apiRequest) {
+utils.makeURL = function(region, apiRequest, queries) {
      
     let url = HTTPS + region + HOST + apiRequest + KEY;
 
