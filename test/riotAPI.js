@@ -1,21 +1,24 @@
-const chai = require('chai');
-const expect = chai.expect;
+require('dotenv').config();
 
 const riotAPI = require('./../server/riotAPIWrapper/riotAPI');
 const apiUtils = require('./../server/riotAPIWrapper/apiUtility');
 const OPTIONS = require('./../server/riotAPIWrapper/constants/requestOptions');
 
+const expect = require('chai').expect;
+
 describe('riotAPI wrapper tests', function() {
 
     describe('summonerName call', function() {
-        it('returned data object has correct keys, throws no error', function() {
+        it('returned data object has correct keys, throws no error', function(done) {
             
             let keys = ['profileIconId', 'name', 'summonerLevel', 'revisionDate', 'id', 'accountId'];
             let summoner = 'rastamonke';
             riotAPI.getSummonerInfoByName(summoner, function(error, data) {
+                
                 expect(error).to.be.null;
-                expect(data).to.have.all.keys(keys);
+                expect(data).to.include.all.keys(keys); 
                 expect(data.name).to.equal(summoner);
+                done();
             });
         });   
     });   
@@ -38,7 +41,7 @@ describe('riotAPI wrapper tests', function() {
             expect(url).to.not.have.string(invalidValue);
         });
         
-        it('returned data object has correct keys, throws no error', function() {
+        it('returned data object has correct keys, throws no error WITHOUT recent flag', function(done) {
            
             let playerID = 38639641;
             let mainKeys = ['matches', 'totalGames', 'startIndex', 'endIndex'];
@@ -48,59 +51,76 @@ describe('riotAPI wrapper tests', function() {
 
             riotAPI.getMatchHistory(playerID, false, options, function(error, data) {
                 expect(error).to.be.null;
-                expect(data).to.have.all.keys(mainKeys);
-                expect(data.matches).to.have.all.keys(matchRefKeys);
+                expect(data).to.include.all.keys(mainKeys);
+                expect(data.matches[0]).to.include.all.keys(matchRefKeys);
+                done();
             });
+            
+        });  
+
+        it('returned data object has correct keys, throws no error WITH recent flag', function(done) {
+           
+            let playerID = 38639641;
+            let mainKeys = ['matches', 'totalGames', 'startIndex', 'endIndex'];
+            let matchRefKeys = ['lane', 'gameId', 'champion', 'platformId', 'season', 'queue', 'role', 'timestamp'];
+            let options = {queue: 420};
+            let maxNumRecent = 20;
             
             riotAPI.getMatchHistory(playerID, true, options, function(error, data) {
                 expect(error).to.be.null;
-                expect(data).to.have.all.keys(mainKeys);
-                expect(data.matches).to.have.all.keys(matchRefKeys);
+                expect(data).to.include.all.keys(mainKeys);
+                expect(data.matches[0]).to.include.all.keys(matchRefKeys);
                 expect(data).to.have.property(mainKeys[1], 20);
-                expect(data).to.have.all.keys(mainKeys[3], 20);
+                expect(data).to.have.property(mainKeys[3], 20);
+                done();
             });
         });   
     });
     
     describe('getMatchData call', function() {
-        it('returned data object has correct keys, throws no error', function() {
+        it('returned data object has correct keys, throws no error', function(done) {
            
             let matchID = 2538566376;
             let mainKeys = ['seasonId', 'queueId', 'gameId', 'participantIdentities', 'gameVersion', 'platformId', 
                             'gameMode', 'mapId', 'gameType', 'teams', 'participants', 'gameDuration', 'gameCreation'];
+            
             let participantIdentitiesKeys = ['player', 'participantId'];
+            
             let playerKeys = ['currentPlatformId', 'summonerName', 'matchHistoryUri', 'platformId', 
                                 'currentAccountId', 'profileIcon', 'summonerId', 'accountId'];
 
             riotAPI.getMatchData(matchID, function(error, data) {
                 expect(error).to.be.null;
-                expect(data).to.have.all.keys(mainKeys);
-                expect(data.participantIdentities).to.have.all.keys(participantIdentitiesKeys);
-                expect(data.participantIdentities.player).to.have.all.keys(playerKeys);
+                expect(data).to.include.all.keys(mainKeys);
+                expect(data.participantIdentities[0]).to.include.all.keys(participantIdentitiesKeys);
+                expect(data.participantIdentities[0].player).to.include.all.keys(playerKeys);
+                done();
             });
         });   
     });
     
     describe('getProfileIcons', function() {
-        it('returned data object has correct keys, throws no error', function() {
+        it('returned data object has correct keys, throws no error', function(done) {
            
             let mainKeys = ['data', 'version', 'type'];
 
             riotAPI.getProfileIcons(function(error, data) {
                 expect(error).to.be.null;
-                expect(data).to.have.all.keys(mainKeys);
+                expect(data).to.include.all.keys(mainKeys);
+                done();
             });
         });   
     });
 
     describe('getChampionInfo', function() {
-        it('returned data object has correct keys, throws no error', function() {
+        it('returned data object has correct keys, throws no error', function(done) {
            
-            let mainKeys = ['keys', 'data', 'version', 'type', 'format'];
+            let mainKeys = ['type', 'version', 'data'];
 
             riotAPI.getChampionInfo(function(error, data) {
                 expect(error).to.be.null;
-                expect(data).to.have.all.keys(mainKeys);
+                expect(data).to.include.all.keys(mainKeys);
+                done();
             });
         });   
     });

@@ -10,11 +10,11 @@ let riotAPI = {};
 /* callback invoked after api call for summoner info, call made by summoner name
  * @param {string} summName: string contaning summoner name 
  * @param {function} callBack: function to be executed on return of data
- * @callback {Object}: passes an object containing summoner data or error data
+ * @callback {Object}: takes match summoner data or error data params
  */
 riotAPI.getSummonerInfoByName = function(summName, callBack, region = CONST.REGION.NA) {
     
-    let apiRequest = API.SUMMONER_BY_NAME + summName + '?';
+    let apiRequest = API.SUMMONER_BY_NAME + summName;
     
     let url = utils.makeURL(region, apiRequest, null);
     // now make a request
@@ -24,14 +24,15 @@ riotAPI.getSummonerInfoByName = function(summName, callBack, region = CONST.REGI
 /* callback invoked after api call for match history, call made by summoner accountID
  * @param {long} accountID: long int contaning summoner account ID 
  * @param {bool} recent: boolean determining if we want just last 20 games or not
+ * @param {Object} options: contains a list of all options to be included in the API request
  * @param {function} callBack: function to be executed on return of data
- * @callback {Object}: passes an object containing match history data or error data
+ * @callback {Object}: takes match history data or error data params
  */
 riotAPI.getMatchHistory = function(accountID, recent, options, callBack, region = CONST.REGION.NA) {
     
     let matchHistoryTag;
     if(recent) {
-        matchHistoryTag = '/recent?' 
+        matchHistoryTag = '/recent' 
         options = null;
     } else {
         matchHistoryTag = '';
@@ -47,7 +48,7 @@ riotAPI.getMatchHistory = function(accountID, recent, options, callBack, region 
 /* callback invoked after api call for match data, call made by matchID
  * @param {long} matchID: long int contaning match ID 
  * @param {function} callBack: function to be executed on return of data
- * @callback {Object}: passes an object containing match data or error data
+ * @callback {Object}: takes match data or error data params
  */
 riotAPI.getMatchData = function(matchID, callBack, region = CONST.REGION.NA) {
     
@@ -61,7 +62,7 @@ riotAPI.getMatchData = function(matchID, callBack, region = CONST.REGION.NA) {
 
 /* callback invoked after api call for profile icon files. STATIC DATA
  * @param {function} callBack: function to be executed on return of data
- * @callback {Object}: passes an object containing profile icon data or error data
+ * @callback {Object}: takes match profile icon data or error data
  */
 riotAPI.getProfileIcons = function(callBack, region = CONST.REGION.NA) {
     
@@ -75,7 +76,7 @@ riotAPI.getProfileIcons = function(callBack, region = CONST.REGION.NA) {
 
 /* callback invoked after api call for champion info. STATIC DATA
  * @param {function} callBack: function to be executed on return of data
- * @callback {Object}: passes an object containing champion info or error data
+ * @callback {Object}: takes match champion info or error data
  */
 riotAPI.getChampionInfo = function(callBack, region = CONST.REGION.NA) {
     let apiRequest = API.CHAMP_LIST;

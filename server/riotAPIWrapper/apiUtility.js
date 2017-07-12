@@ -15,10 +15,11 @@ utils = {};
  * @return {Object}: returns object containing either an error status code OR the requested info
  */
 utils.makeRequest = function(url, callBack){
-   
+    
+    console.log(url);
     request(url, function(error, response, body) {
-        console.log('error:', error); // Print the error if one occurred 
-        console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received 
+        //console.log('error:', error); // Print the error if one occurred 
+        //console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received 
        
         let statusCode = response.statusCode;
 

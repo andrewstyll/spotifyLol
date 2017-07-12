@@ -1,9 +1,10 @@
 // This will be a list of all constants and their mappings required by the riot games API
 
 // to use, add an API key.js file containing an API key to /spotifyLol/server/riotAPIWrapper and export the key. It will be added here
-const KEY = require('./key');
+const KEY = process.env.PROD_KEY || process.env.DEV_KEY;
+//= require('./key');
 
-const API_POSTFIX = 'api_key='+ KEY.DEV_KEY;
+const API_POSTFIX = 'api_key='+ KEY;
 
 const HTTPS_HEAD = 'https://';
 const HOST = '.api.riotgames.com';

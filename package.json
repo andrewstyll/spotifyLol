@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/andrewstyll/spotifyLol#readme",
   "dependencies": {
+    "dotenv": "^4.0.0",
     "express": "^4.15.3",
     "request": "^2.81.0"
   },
