@@ -3,7 +3,7 @@
 // to use, add an API key.js file containing an API key to /spotifyLol/server/riotAPIWrapper and export the key. It will be added here
 const KEY = require('./key');
 
-const API_POSTFIX = '/?api_key='+ KEY.DEV_KEY;
+const API_POSTFIX = 'api_key='+ KEY.DEV_KEY;
 
 const HTTPS_HEAD = 'https://';
 const HOST = '.api.riotgames.com';
@@ -35,17 +35,10 @@ const API_CALL = {
     CHAMP_LIST: '/lol/static-data/v3/champions'
 };
 
-// This will contain a list of all of the queues that return match data containing summoner info with the purpose of
-// assigning a winning percentage on a champion to the summoner
-const MM_Q = {
-
-};
-
 module.exports = {
     HTTPS_HEAD,
     API_POSTFIX,
     HOST,
     REGION,
-    API_CALL,
-    MM_Q
+    API_CALL
 };

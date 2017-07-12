@@ -4,7 +4,8 @@
   "description": "Recommend songs based on mood determined by league of legends match history and previous stats",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --recursive",
+    "test:watch": "npm run test -- --watch",
     "start": "node app.js"
   },
   "repository": {
@@ -26,5 +27,9 @@
   "dependencies": {
     "express": "^4.15.3",
     "request": "^2.81.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.0",
+    "mocha": "^3.4.2"
   }
 }

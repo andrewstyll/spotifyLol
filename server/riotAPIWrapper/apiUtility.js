@@ -1,5 +1,6 @@
 const request = require('request');
 const CONST = require('./constants/requestConstants');
+const OPTIONS = require('./constants/requestOptions');
 const ERROR_CODES = require('./constants/errorCodes');
 
 const HTTPS = CONST.HTTPS_HEAD;
@@ -14,8 +15,7 @@ utils = {};
  * @return {Object}: returns object containing either an error status code OR the requested info
  */
 utils.makeRequest = function(url, callBack){
-    
-    console.log(url);
+   
     request(url, function(error, response, body) {
         console.log('error:', error); // Print the error if one occurred 
         console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received 
@@ -37,15 +37,28 @@ utils.makeRequest = function(url, callBack){
 /* makes a URL based on given parameters, returns url as string
  * @param {string} region: region where data will come from
  * @param {string} apiRequest: api request, contains optiions
+ * @param {Object} options: contains a list of all options to be included in the API request
  * @return {string}: returns string containing URL
  */
-utils.makeURL = function(region, apiRequest, queries) {
-     
-    let url = HTTPS + region + HOST + apiRequest + KEY;
+utils.makeURL = function(region, apiRequest, optionsObj) {
+    
+    let options = '?';
+
+    if(optionsObj != null) {
+        for(var key in optionsObj) {
+            
+            let value = optionsObj[key];
+            
+            if(optionsObj.hasOwnProperty(key) && OPTIONS.hasOwnProperty(key) && OPTIONS[key].hasOwnProperty(value)) {    
+                    options += key.toString() + '=' + OPTIONS[key][value] + '&';
+                
+            }
+        }
+    }
+
+    let url = HTTPS + region + HOST + apiRequest + options + KEY;
 
     return url;
 }
-
-
 
 module.exports = utils;

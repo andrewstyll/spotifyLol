@@ -14,9 +14,9 @@ let riotAPI = {};
  */
 riotAPI.getSummonerInfoByName = function(summName, callBack, region = CONST.REGION.NA) {
     
-    let apiRequest = API.SUMMONER_BY_NAME + summName;
+    let apiRequest = API.SUMMONER_BY_NAME + summName + '?';
     
-    let url = utils.makeURL(region, apiRequest);
+    let url = utils.makeURL(region, apiRequest, null);
     // now make a request
     utils.makeRequest(url, callBack);
 }
@@ -27,19 +27,18 @@ riotAPI.getSummonerInfoByName = function(summName, callBack, region = CONST.REGI
  * @param {function} callBack: function to be executed on return of data
  * @callback {Object}: passes an object containing match history data or error data
  */
-//TODO::need to implement options for queries :D
-riotAPI.getMatchHistory = function(accountID, recent, callBack, region = CONST.REGION.NA) {
+riotAPI.getMatchHistory = function(accountID, recent, options, callBack, region = CONST.REGION.NA) {
     
     let matchHistoryTag;
     if(recent) {
-        matchHistoryTag = '/recent' 
+        matchHistoryTag = '/recent?' 
+        options = null;
     } else {
-        // can add in options based on what type of query I want
         matchHistoryTag = '';
     }
     let apiRequest = API.MATCH_BY_ACC_ID + accountID + matchHistoryTag;
 
-    let url = utils.makeURL(region, apiRequest);
+    let url = utils.makeURL(region, apiRequest, options);
     
     // now make a request
     utils.makeRequest(url, callBack);
@@ -54,20 +53,37 @@ riotAPI.getMatchData = function(matchID, callBack, region = CONST.REGION.NA) {
     
     let apiRequest = API.MATCH_BY_MATCH_ID + matchID;
 
-    let url = utils.makeURL(region, apiRequest);
+    let url = utils.makeURL(region, apiRequest, null);
     
     // now make a request
     utils.makeRequest(url, callBack);
 }
 
-//TODO::need to implement options for queries :D
+/* callback invoked after api call for profile icon files. STATIC DATA
+ * @param {function} callBack: function to be executed on return of data
+ * @callback {Object}: passes an object containing profile icon data or error data
+ */
 riotAPI.getProfileIcons = function(callBack, region = CONST.REGION.NA) {
+    
     let apiRequest = API.PROFILE_ICONS;
+
+    let url = utils.makeURL(region, apiRequest, null);
+    
+    // now make a request
+    utils.makeRequest(url, callBack);
 }
 
-//TODO::need to implement options for queries :D
+/* callback invoked after api call for champion info. STATIC DATA
+ * @param {function} callBack: function to be executed on return of data
+ * @callback {Object}: passes an object containing champion info or error data
+ */
 riotAPI.getChampionInfo = function(callBack, region = CONST.REGION.NA) {
     let apiRequest = API.CHAMP_LIST;
+
+    let url = utils.makeURL(region, apiRequest, null);
+    
+    // now make a request
+    utils.makeRequest(url, callBack);
 }
 
 module.exports = riotAPI;
