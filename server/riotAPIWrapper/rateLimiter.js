@@ -4,7 +4,7 @@ const TokenBucket = require('./tokenBucket');
  * @param {Integer} ratePerInterval: number of calls to be made across each interval
  * @param {Integer} interval: length of interval that rate applies to in milliseconds
  */
-let RateLimiter = function(ratePerInterval, interval) {
+const RateLimiter = function(ratePerInterval, interval) {
     // init bucket and bucket queue
     this.bucket = new TokenBucket(ratePerInterval, interval);
     this.reqQueue = [];

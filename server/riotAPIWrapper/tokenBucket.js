@@ -2,7 +2,7 @@
  * @param {Integer} ratePerInterval: number of calls to be made across each interval
  * @param {Integer} interval: length of interval that rate applies to in milliseconds
  */
-let TokenBucket = function (ratePerInterval, interval) {
+const TokenBucket = function (ratePerInterval, interval) {
     // ratePerInterval = req/interval, interval = milliseconds
     
     this.bucketSize = ratePerInterval; // the maximum number of tokens I want to allow in my bucket at once
