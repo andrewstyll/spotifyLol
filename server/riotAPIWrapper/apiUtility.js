@@ -22,21 +22,24 @@ let rateLimiterFast;
 utils.makeRequest = function(url, callBack){
     
     console.log(url);
-    request(url, function(error, response, body) {
-        //console.log('error:', error); // Print the error if one occurred 
-        //console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received 
-       
-        let statusCode = response.statusCode;
+    
+   utils.schedule(function() {
+        request(url, function(error, response, body) {
+            //console.log('error:', error); // Print the error if one occurred 
+            //console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received 
+           
+            let statusCode = response.statusCode;
 
-        if(statusCode != 200) {
-            if(ERROR_CODES.hasOwnProperty(statusCode)) {
-                callBack({errorResponse: statusCode, message: ERROR_CODES[statusCode]}, null);
+            if(statusCode != 200) {
+                if(ERROR_CODES.hasOwnProperty(statusCode)) {
+                    callBack({errorResponse: statusCode, message: ERROR_CODES[statusCode]}, null);
+                } else {
+                    callBack({errorResponse: statusCode, message: 'ERROR'}, null);
+                }
             } else {
-                callBack({errorResponse: statusCode, message: 'ERROR'}, null);
+                callBack(null, JSON.parse(body));
             }
-        } else {
-            callBack(null, JSON.parse(body));
-        }
+        });
     });
 }
 
@@ -54,10 +57,8 @@ utils.makeURL = function(region, apiRequest, optionsObj) {
         for(var key in optionsObj) {
             
             let value = optionsObj[key];
-            
             if(optionsObj.hasOwnProperty(key) && OPTIONS.hasOwnProperty(key) && OPTIONS[key].hasOwnProperty(value)) {    
-                    options += key.toString() + '=' + OPTIONS[key][value] + '&';
-                
+                options += key.toString() + '=' + OPTIONS[key][value] + '&';
             }
         }
     }
@@ -67,8 +68,15 @@ utils.makeURL = function(region, apiRequest, optionsObj) {
     return url;
 }
 
-utils.schedule = function() {
-    
+/* schedules the reqWrapper to be called as tokens become available to the rateLimiters
+ * @param {function} reqWrapper: function wrapping the request function. Will be executed by the rateLimiters
+ */
+utils.schedule = function(reqWrapper) {
+    // TODO:: need to create feedback for my API scraping scheduler so it knows when to slow down requests, right now it
+    // could make requests forever, filling up the rateLimiter queues to infinity
+    rateLimiterFast.scheduleRequest(function () {
+        rateLimiterSlow.scheduleRequest(reqWrapper);
+    });
 }
 
 /* initialises rate limiter objects with limits pulled from environment variables. Will have to look into allocating

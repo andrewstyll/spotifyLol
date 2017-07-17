@@ -6,6 +6,8 @@ const OPTIONS = require('./../server/riotAPIWrapper/constants/requestOptions');
 
 const expect = require('chai').expect;
 
+riotAPI.initAPIWrapper();
+
 describe('riotAPI wrapper tests', function() {
 
     function checkValidError(error) {
