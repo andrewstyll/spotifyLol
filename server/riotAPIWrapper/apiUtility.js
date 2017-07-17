@@ -2,12 +2,17 @@ const request = require('request');
 const CONST = require('./constants/requestConstants');
 const OPTIONS = require('./constants/requestOptions');
 const ERROR_CODES = require('./constants/errorCodes');
+const RateLimiter = require('./rateLimiter');
 
 const HTTPS = CONST.HTTPS_HEAD;
 const HOST = CONST.HOST; //string
 const KEY = CONST.API_POSTFIX; //string containing API key
 
 utils = {};
+
+// rate limit variables that will be initialised by utils.initRateLimiters()
+let rateLimiterSlow;
+let rateLimiterFast;
 
 /* makes a http request at given URL
  * @param {string} url: url of request
@@ -29,7 +34,7 @@ utils.makeRequest = function(url, callBack){
             } else {
                 callBack({errorResponse: statusCode, message: 'ERROR'}, null);
             }
-        } else { 
+        } else {
             callBack(null, JSON.parse(body));
         }
     });
@@ -60,6 +65,25 @@ utils.makeURL = function(region, apiRequest, optionsObj) {
     let url = HTTPS + region + HOST + apiRequest + options + KEY;
 
     return url;
+}
+
+utils.schedule = function() {
+    
+}
+
+/* initialises rate limiter objects with limits pulled from environment variables. Will have to look into allocating
+ * portions of the rate limitations to account for client invoked api calls.
+ */
+utils.initRateLimiters = function() {
+    // grab environment variables, intervals are in seconds so convert to milliseconds
+    let ratePerIntervalSlow = process.env.PROD_SLOW_REQ || process.env.DEV_SLOW_REQ;
+    let intervalSlow = (process.env.PROD_SLOW_INTERVAL || process.env.DEV_SLOW_INTERVAL)*1000;
+   
+    let ratePerIntervalFast = process.env.PROD_FAST_REQ || process.env.DEV_FAST_REQ;
+    let intervalFast = (process.env.PROD_FAST_INTERVAL || process.env.DEV_FAST_INTERVAL)*1000;
+    
+    rateLimiterSlow = new RateLimiter(ratePerIntervalSlow, intervalSlow);
+    rateLimiterFast = new RateLimiter(ratePerIntervalFast, intervalFast);
 }
 
 module.exports = utils;

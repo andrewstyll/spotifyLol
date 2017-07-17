@@ -1,8 +1,6 @@
 // This will be a list of all constants and their mappings required by the riot games API
 
-// to use, add an API key.js file containing an API key to /spotifyLol/server/riotAPIWrapper and export the key. It will be added here
 const KEY = process.env.PROD_KEY || process.env.DEV_KEY;
-//= require('./key');
 
 const API_POSTFIX = 'api_key='+ KEY;
 
@@ -30,7 +28,8 @@ const API_CALL = {
     // also reused for recent matches. needs a recent appended for recent matched after accountID
     MATCH_BY_ACC_ID: '/lol/match/v3/matchlists/by-account/', //{accountID} /recent
     MATCH_BY_MATCH_ID: '/lol/match/v3/matches/', //{match-ID}
-    
+    CURRENT_MATCH_BY_SUMMONER_ID: '/lol/spectator/v3/active-games/by-summoner/', //{summoner-id}
+
     // STATIC CALLS
     PROFILE_ICONS: '/lol/static-data/v3/profile-icons',
     CHAMP_LIST: '/lol/static-data/v3/champions'

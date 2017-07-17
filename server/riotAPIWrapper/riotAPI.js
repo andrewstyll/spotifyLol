@@ -7,6 +7,10 @@ const API = CONST.API_CALL; //API_CALL object
 
 let riotAPI = {};
 
+riotAPI.initAPIWrapper = function() {
+    utils.initRateLimiters();
+}
+
 /* callback invoked after api call for summoner info, call made by summoner name
  * @param {string} summName: string contaning summoner name 
  * @param {function} callBack: function to be executed on return of data
@@ -56,6 +60,20 @@ riotAPI.getMatchData = function(matchID, callBack, region = CONST.REGION.NA) {
 
     let url = utils.makeURL(region, apiRequest, null);
     
+    // now make a request
+    utils.makeRequest(url, callBack);
+}
+
+/* callback invoked after api call for curent game  info, call made by summonerID
+ * @param {long} summonerID: long int contaning summonerID 
+ * @param {function} callBack: function to be executed on return of data
+ * @callback {Object}: takes match summoner data or error data params
+ */
+riotAPI.getCurrentGameBySummID = function(summonerID, callBack, region = CONST.REGION.NA) {
+    
+    let apiRequest = API.SUMMONER_BY_NAME + summonerID;
+    
+    let url = utils.makeURL(region, apiRequest, null);
     // now make a request
     utils.makeRequest(url, callBack);
 }
