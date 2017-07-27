@@ -2,7 +2,6 @@ require('dotenv').config();
 
 const TokenBucket = require('./../server/riotAPIWrapper/tokenBucket');
 const RateLimiter = require('./../server/riotAPIWrapper/rateLimiter');
-const OPTIONS = require('./../server/riotAPIWrapper/constants/requestOptions');
 
 const expect = require('chai').expect;
 
