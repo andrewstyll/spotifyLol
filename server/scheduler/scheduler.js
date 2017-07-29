@@ -1,15 +1,13 @@
 const riotAPI = require('../riotAPIWrapper/riotAPI');
 const PriorityQueue = require('../../utils/priorityQueue');
 
-const QUEUE_SIZE = 100;
-
 scheduler = {};
 
 let reqQueue;
 
 scheduler.start = function() {
 
-    reqQueue = new PriorityQueue(QUEUE_SIZE);
+    reqQueue = new PriorityQueue();
 
     riotAPI.initAPIWrapper();
     scheduler.startCrawl();
