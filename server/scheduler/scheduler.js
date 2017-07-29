@@ -13,7 +13,6 @@ scheduler.start = function() {
     scheduler.startCrawl();
 }
 
-
 // database needs to be pre seeded with some number of players from different ranks to get an even distribution
 scheduler.startCrawl = function() {
     // 1. look up x number of people from db
