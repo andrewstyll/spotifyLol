@@ -1,8 +1,8 @@
 require('dotenv').config();
 
-const riotAPI = require('./../server/riotAPIWrapper/riotAPI');
-const apiUtils = require('./../server/riotAPIWrapper/apiUtility');
-const OPTIONS = require('./../server/riotAPIWrapper/constants/requestOptions');
+const riotAPI = require('./../app/server/riotAPIWrapper/riotAPI');
+const apiUtils = require('./../app/server/riotAPIWrapper/apiUtility');
+const OPTIONS = require('./../app/server/riotAPIWrapper/constants/requestOptions');
 
 const expect = require('chai').expect;
 

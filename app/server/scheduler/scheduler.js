@@ -1,5 +1,5 @@
 const riotAPI = require('../riotAPIWrapper/riotAPI');
-const PriorityQueue = require('../../utils/priorityQueue');
+const PriorityQueue = require('../../../utils/priorityQueue');
 
 scheduler = {};
 
