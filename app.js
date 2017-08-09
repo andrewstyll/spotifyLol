@@ -1,13 +1,12 @@
 const express = require('express');
 
+require('dotenv').config();
+
+const db = require('./db/db');
 const routes = require('./routes');
 const scheduler = require('./app/server/scheduler/scheduler');
 
 const app = express();
-
-require('dotenv').config();
-
-const db = require('./db/db');
 
 app.use('/', routes);
 

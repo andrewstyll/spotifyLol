@@ -1,5 +1,6 @@
 const riotAPI = require('../riotAPIWrapper/riotAPI');
 const PriorityQueue = require('../../../utils/priorityQueue');
+const utils = require('./schedulerUtility');
 
 scheduler = {};
 
@@ -15,6 +16,14 @@ scheduler.start = function() {
 
 // database needs to be pre seeded with some number of players from different ranks to get an even distribution
 scheduler.startCrawl = function() {
+
+    summonersToQuery = utils.getTodaysSummoners();
+// NEW PLAN
+    // 1. grab list of all summoners to update today
+    // 2. CALL summoner -> if new 
+
+// -----------------------------------
+// OLD PLAN
     // 1. look up x number of people from db
     // 2. for each player, look up their match history and store the match ID's so I know what has and hasn't been looked
     //      up already

@@ -8,9 +8,9 @@ const HTTPS = CONST.HTTPS_HEAD;
 const HOST = CONST.HOST; //string
 const KEY = CONST.API_POSTFIX; //string containing API key
 
-utils = {};
+apiUtils = {};
 
-// rate limit variables that will be initialised by utils.initRateLimiters()
+// rate limit variables that will be initialised by apiUtils.initRateLimiters()
 let rateLimiterSlow;
 let rateLimiterFast;
 
@@ -19,11 +19,9 @@ let rateLimiterFast;
  * @param {function} callBack: function to be executed on return of data
  * @return {Object}: returns object containing either an error status code OR the requested info
  */
-utils.makeRequest = function(url, callBack){
+apiUtils.makeRequest = function(url, callBack){
     
-    //console.log(url);
-    
-    utils.schedule(function() {
+    apiUtils.schedule(function() {
         request(url, function(error, response, body) {
             //console.log('error:', error); // Print the error if one occurred 
             //console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received 
@@ -49,7 +47,7 @@ utils.makeRequest = function(url, callBack){
  * @param {Object} options: contains a list of all options to be included in the API request
  * @return {string}: returns string containing URL
  */
-utils.makeURL = function(region, apiRequest, optionsObj) {
+apiUtils.makeURL = function(region, apiRequest, optionsObj) {
     
     let options = '?';
 
@@ -71,7 +69,7 @@ utils.makeURL = function(region, apiRequest, optionsObj) {
 /* schedules the reqWrapper to be called as tokens become available to the rateLimiters
  * @param {function} reqWrapper: function wrapping the request function. Will be executed by the rateLimiters
  */
-utils.schedule = function(reqWrapper) {
+apiUtils.schedule = function(reqWrapper) {
     // TODO:: need to create feedback for my API scraping scheduler so it knows when to slow down requests, right now it
     // could make requests forever, filling up the rateLimiter queues to infinity
     rateLimiterFast.scheduleRequest(function () {
@@ -82,8 +80,11 @@ utils.schedule = function(reqWrapper) {
 /* initialises rate limiter objects with limits pulled from environment variables. Will have to look into allocating
  * portions of the rate limitations to account for client invoked api calls.
  */
-utils.initRateLimiters = function() {
+apiUtils.initRateLimiters = function() {
     // grab environment variables, intervals are in seconds so convert to milliseconds
+
+    // TODO:: when initialising rate limiter, make a test call to determine actual limit from response header.
+    // Initialising and reinitialising tests with same keyu resets internal rate limit but not actual key limit
     let ratePerIntervalSlow = process.env.PROD_SLOW_REQ || process.env.DEV_SLOW_REQ;
     let intervalSlow = (process.env.PROD_SLOW_INTERVAL || process.env.DEV_SLOW_INTERVAL)*1000;
    
@@ -94,4 +95,4 @@ utils.initRateLimiters = function() {
     rateLimiterFast = new RateLimiter(ratePerIntervalFast, intervalFast);
 }
 
-module.exports = utils;
+module.exports = apiUtils;

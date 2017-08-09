@@ -1,7 +1,15 @@
 const mongoose = require('mongoose');
 
-const mongoURL = process.env.DEV_DB_URL;
-const mongoURI = "mongodb://" + process.env.DEV_DB_CREDENTIALS + mongoURL;
+function setURL() {
+    let mongoURL;
+    if(process.env.NODE_ENV == 'test') {
+        mongoURL = process.env.TEST_DB_URL;
+    } else {
+        mongoURL = process.env.DEV_DB_CREDENTIALS + process.env.DEV_DB_URL;
+    }
+    return mongoURL;
+}
+const mongoURI = "mongodb://" + setURL();//process.env.DEV_DB_CREDENTIALS + mongoURL;
 
 // Only have one connection so use .connect
 mongoose.connect(mongoURI);

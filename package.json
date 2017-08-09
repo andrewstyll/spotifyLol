@@ -4,8 +4,10 @@
   "description": "Recommend songs based on mood determined by league of legends match history and previous stats",
   "main": "app.js",
   "scripts": {
-    "test": "mocha --recursive",
+    "pretest": "mongod --fork --logpath /dev/null",
+    "test": "mocha --require ./test/test_helper.js --recursive || true",
     "test:watch": "npm run test -- --watch",
+    "posttest": "mongo admin --eval 'db.shutdownServer()' > /dev/null",
     "start": "node app.js"
   },
   "repository": {
