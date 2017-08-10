@@ -1,9 +1,9 @@
-const db = require('../db/db');
-const schedulerUtils = require('../app/server/scheduler/schedulerUtility');
+const db = require('./../../db/db');
+const summUtils = require('./../../app/server/scheduler/summonerUtility');
 
 const expect = require('chai').expect;
 
-describe('schedulerUtility tests', function() {
+describe('summonerUtility tests', function() {
     describe('getTodaysDate call', function() {
         it('should produce the correctly formatted date of today (dd/mm/yyy)', function() {
             let date = new Date();
@@ -11,13 +11,13 @@ describe('schedulerUtility tests', function() {
             let month = date.getMonth()+1;
             let year = date.getFullYear();
             
-            let todaysDate = schedulerUtils.getTodaysDate(); 
+            let todaysDate = summUtils.getTodaysDate(); 
             
             expect(todaysDate).to.equal(day + '/' + month + '/' + year);
         }); 
     });
 
-    let date = schedulerUtils.getTodaysDate();
+    let date = summUtils.getTodaysDate();
 
     let newSummoner = {
         "profileIconId": 1265,
@@ -51,7 +51,7 @@ describe('schedulerUtility tests', function() {
         
         it('should produce a summoner object based on the summoner schema', function() {
         
-            let createdSummoner = schedulerUtils.createSummoner(newSummoner, date);
+            let createdSummoner = summUtils.createSummoner(newSummoner, date);
             
             expect(createdSummoner.profileIconId).to.equal(newSummoner.profileIconId);
             expect(createdSummoner.name).to.equal(newSummoner.name);
@@ -64,8 +64,8 @@ describe('schedulerUtility tests', function() {
 
     describe('summoner DB operations call', function() {
         it('callBack should return true for calls to store summoner value in DB', function (done) {
-            let createdSummoner = schedulerUtils.createSummoner(newSummoner, date);
-            schedulerUtils.saveSummoner(createdSummoner, function(error) {
+            let createdSummoner = summUtils.createSummoner(newSummoner, date);
+            summUtils.saveSummoner(createdSummoner, function(error) {
                 
                 expect(error).to.be.null;
                 done();
@@ -79,14 +79,14 @@ describe('schedulerUtility tests', function() {
             let month = newDate.getMonth()+2;
             let year = newDate.getFullYear();
             
-            let createdSummoner = schedulerUtils.createSummoner(baitSummoner, day + '/' + month + '/' + year);
-            let anothaSummoner = schedulerUtils.createSummoner(baitSummoner, date);
+            let createdSummoner = summUtils.createSummoner(baitSummoner, day + '/' + month + '/' + year);
+            let anothaSummoner = summUtils.createSummoner(baitSummoner, date);
         
-            schedulerUtils.saveSummoner(createdSummoner, function(error) {
+            summUtils.saveSummoner(createdSummoner, function(error) {
                 expect(error).to.be.null;
                 
-                schedulerUtils.saveSummoner(anothaSummoner, function(error) { 
-                    schedulerUtils.getTodaysSummoners(function(error, summoners) {
+                summUtils.saveSummoner(anothaSummoner, function(error) { 
+                    summUtils.getTodaysSummoners(function(error, summoners) {
                         
                         expect(error).to.be.null;
                         expect(summoners).to.have.lengthOf(2);
@@ -99,15 +99,34 @@ describe('schedulerUtility tests', function() {
             
         });
 
+        it('summonerUpdate should update a summoner object with a newdate provided', function(done) {
+            summUtils.getTodaysSummoners(function(error, summoners) {
+                
+                expect(error).to.be.null;
+                expect(summoners).to.have.lengthOf(2);
+                let summoner1 = summoners[0];
+                summUtils.updateSummoner(summoner1, {updateScheduled: '25/01/1999'}, function(error, raw) {
+                    expect(error).to.be.null;
+                    summUtils.getTodaysSummoners(function(error, summonersAgain) {
+                        
+                        expect(error).to.be.null;
+                        expect(summonersAgain).to.have.lengthOf(1);
+                        expect(summonersAgain[0]).to.have.property('accountId', 35488264);
+                        done();
+                    });
+                });  
+            });
+        });
+
         it('remove summoners should remove summoners with given conditions', function(done) {
-            schedulerUtils.removeSummoner({updateScheduled: date}, function(error) {
+            summUtils.removeSummoner({updateScheduled: date}, function(error) {
                expect(error).to.be.null;
                done();
             });
         });
         
         it('remove summoners should remove all summoners due to empty conditions', function(done) {
-            schedulerUtils.removeSummoner({}, function(error) {
+            summUtils.removeSummoner({}, function(error) {
                expect(error).to.be.null;
                done();
             });

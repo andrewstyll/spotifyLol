@@ -35,10 +35,18 @@ const API_CALL = {
     CHAMP_LIST: '/lol/static-data/v3/champions'
 };
 
+const REQ_PRIORITY = {
+    USER_REQ: 1,
+    USER_REQ_RETRANS: 2,
+    BCKGRND: 3,
+    BCKGRND_RETRANS: 4,
+};
+
 module.exports = {
     HTTPS_HEAD,
     API_POSTFIX,
     HOST,
     REGION,
-    API_CALL
+    API_CALL,
+    REQ_PRIORITY
 };

@@ -9,15 +9,15 @@ function setURL() {
     }
     return mongoURL;
 }
-const mongoURI = "mongodb://" + setURL();//process.env.DEV_DB_CREDENTIALS + mongoURL;
+const mongoURI = "mongodb://" + setURL();
 
 // Only have one connection so use .connect
 mongoose.connect(mongoURI);
 
-const db = mongoose.connection
+const db = mongoose.connection;
 
 // error message
-db.on('error',function (err) {  
+db.on('error', function (err) {  
     console.log('Mongoose default connection error: ' + err);
 }); 
 
@@ -28,7 +28,7 @@ db.on('disconnected', function () {
 
 // close mongoDB connection if app is exiting
 function cleanUp() {  
-    db.close(function () { 
+    db.close(function () {
         console.log('Mongoose default connection disconnected through app termination'); 
         process.exit(0); 
     }); 

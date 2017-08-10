@@ -2,6 +2,8 @@ const express = require('express');
 
 require('dotenv').config();
 
+process.env.NODE_ENV = "test";
+
 const db = require('./db/db');
 const routes = require('./routes');
 const scheduler = require('./app/server/scheduler/scheduler');

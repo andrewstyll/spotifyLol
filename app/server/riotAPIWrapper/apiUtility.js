@@ -15,13 +15,14 @@ let rateLimiterSlow;
 let rateLimiterFast;
 
 /* makes a http request at given URL
+ * @param {Integer} priority: priority rating for the request
  * @param {string} url: url of request
  * @param {function} callBack: function to be executed on return of data
  * @return {Object}: returns object containing either an error status code OR the requested info
  */
-apiUtils.makeRequest = function(url, callBack){
+apiUtils.makeRequest = function(priority, url, callBack){
     
-    apiUtils.schedule(function() {
+    apiUtils.schedule(priority, function() {
         request(url, function(error, response, body) {
             //console.log('error:', error); // Print the error if one occurred 
             //console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received 
@@ -67,13 +68,14 @@ apiUtils.makeURL = function(region, apiRequest, optionsObj) {
 }
 
 /* schedules the reqWrapper to be called as tokens become available to the rateLimiters
+ * @param {Integer} priority: priority rating for the requestWrapper
  * @param {function} reqWrapper: function wrapping the request function. Will be executed by the rateLimiters
  */
-apiUtils.schedule = function(reqWrapper) {
+apiUtils.schedule = function(priority, reqWrapper) {
     // TODO:: need to create feedback for my API scraping scheduler so it knows when to slow down requests, right now it
     // could make requests forever, filling up the rateLimiter queues to infinity
-    rateLimiterFast.scheduleRequest(function () {
-        rateLimiterSlow.scheduleRequest(reqWrapper);
+    rateLimiterFast.scheduleRequest(priority, function () {
+        rateLimiterSlow.scheduleRequest(priority, reqWrapper);
     });
 }
 

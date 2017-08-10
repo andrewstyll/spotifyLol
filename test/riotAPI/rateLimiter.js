@@ -1,5 +1,8 @@
-const TokenBucket = require('./../app/server/riotAPIWrapper/tokenBucket');
-const RateLimiter = require('./../app/server/riotAPIWrapper/rateLimiter');
+const TokenBucket = require('./../../app/server/riotAPIWrapper/tokenBucket');
+const RateLimiter = require('./../../app/server/riotAPIWrapper/rateLimiter');
+const CONST = require('./../../app/server/riotAPIWrapper/constants/requestConstants');
+
+const REQ_PRIORITY = CONST.REQ_PRIORITY;
 
 const expect = require('chai').expect;
 
@@ -11,29 +14,29 @@ describe('RateLimiter and TokenBucket Test', function() {
                 limTest = new RateLimiter(1, 10*1000); // one request every 10 seconds   
                 let count = 0;
                 for(let i = 0; i < 3; i++) {
-                    limTest.scheduleRequest(function() {
+                    limTest.scheduleRequest(REQ_PRIORITY.BCKGRND, function() {
                         count++;    
                     });
                 }
                 expect(count).to.equal(1);
-                expect(limTest.reqQueue.length).to.equal(2);
+                expect(limTest.reqQueue.getSize()).to.equal(2);
             });
             
             it('rate limiter executes requests after each interval', function(done) {
                 limTest = new RateLimiter(1, 1*1000); // one request every 10 seconds   
                 let count = 0;
                 for(let i = 0; i < 2; i++) {
-                    limTest.scheduleRequest(function() {
+                    limTest.scheduleRequest(REQ_PRIORITY.BCKGRND, function() {
                         count++;    
                     });
                 }
                 expect(count).to.equal(1);
-                expect(limTest.reqQueue.length).to.equal(1);
+                expect(limTest.reqQueue.getSize()).to.equal(1);
 
                 setTimeout(function() {
                     try {
                         expect(count).to.equal(2);
-                        expect(limTest.reqQueue.length).to.equal(0);
+                        expect(limTest.reqQueue.getSize()).to.equal(0);
                         done(); 
                     } catch(e) {
                         done(e);
