@@ -42,6 +42,22 @@ apiUtils.makeRequest = function(priority, url, callBack){
     });
 }
 
+/* this checks if the key and value are valid. If they are, they will be appended to the array
+ * @params {String} key: key we will be checking from the obj object
+ * @params {String/Integer} value we will be checking from the obj object against predetermined constants
+ * @param {Object} options: contains a list of all options to be included in the API request
+ * @return {String}: returns a string that will be appeneded to the URL string
+ */
+apiUtils.checkOption = function(key, value, obj) {
+    console.log(obj);
+    if(obj.hasOwnProperty(key) && OPTIONS.hasOwnProperty(key) && OPTIONS[key].hasOwnProperty(value)) {    
+        console.log("HI");
+        return key.toString() + '=' + OPTIONS[key][value] + '&';
+    } else {
+        return "";
+    }
+}
+
 /* makes a URL based on given parameters, returns url as string
  * @param {string} region: region where data will come from
  * @param {string} apiRequest: api request, contains optiions
@@ -56,14 +72,24 @@ apiUtils.makeURL = function(region, apiRequest, optionsObj) {
         for(var key in optionsObj) {
             
             let value = optionsObj[key];
-            if(optionsObj.hasOwnProperty(key) && OPTIONS.hasOwnProperty(key) && OPTIONS[key].hasOwnProperty(value)) {    
-                options += key.toString() + '=' + OPTIONS[key][value] + '&';
+            // if the value is an array, 
+            if(Object.prototype.toString.call( value ) === '[object Array]') {
+                for(let i = 0; i < value.length; i++) {
+                    options += apiUtils.checkOption(key, value[i], optionsObj);
+                }
+            } else {
+                options += apiUtils.checkOption(key, value, optionsObj);
             }
+            // this checks if the value is valid, if it is, it adds it. This can work for arrays and 
+            //if(optionsObj.hasOwnProperty(key) && OPTIONS.hasOwnProperty(key) && OPTIONS[key].hasOwnProperty(value)) {    
+            //    options += key.toString() + '=' + OPTIONS[key][value] + '&';
+            //}
         }
     }
 
     let url = HTTPS + region + HOST + apiRequest + options + KEY;
 
+    console.log(url);
     return url;
 }
 

@@ -13,16 +13,17 @@ describe('riotAPI wrapper tests', function() {
                 
                 let region = 'testRegion';
                 let apiRequest = '/testRequest';
-                let validValue = OPTIONS.queue.RANKED_FLEX_SR;
+                let validValues = [OPTIONS.queue.RANKED_FLEX_SR, OPTIONS.queue.RANKED_FLEX_TT];
                 let invalidValue = OPTIONS.queue.TEAM_BUILDER_RANKED_SOLO;
-                
-                let options = {banana: 123, season: 'alphabet', queue: 'RANKED_FLEX_SR', grape: 'TEAM_BUILDER_RANKED_SOLO'}
+
+                let options = {banana: 123, season: 'alphabet', queue: ['RANKED_FLEX_SR', 'RANKED_FLEX_TT'], grape: 'TEAM_BUILDER_RANKED_SOLO'}
                 let url = apiUtils.makeURL(region, apiRequest, options);
                 
                 expect(url).to.not.have.string('banana');
                 expect(url).to.not.have.string('season');
                 expect(url).to.have.string('queue');
-                expect(url).to.have.string(validValue);
+                expect(url).to.have.string(validValues[0]);
+                expect(url).to.have.string(validValues[1]);
                 expect(url).to.not.have.string(invalidValue);
             });
         });
@@ -65,7 +66,7 @@ describe('riotAPI wrapper tests', function() {
                 let playerID = 38639641;
                 let mainKeys = ['matches', 'totalGames', 'startIndex', 'endIndex'];
                 let matchRefKeys = ['lane', 'gameId', 'champion', 'platformId', 'season', 'queue', 'role', 'timestamp'];
-                let options = {queue: 420};
+                let options = {queue: 'TEAM_BUILDER_RANKED_SOLO'};
                 let maxNumRecent = 20;
 
                 riotAPI.getMatchHistory(playerID, false, options, function(error, data) {
@@ -87,7 +88,7 @@ describe('riotAPI wrapper tests', function() {
                 let playerID = 38639641;
                 let mainKeys = ['matches', 'totalGames', 'startIndex', 'endIndex'];
                 let matchRefKeys = ['lane', 'gameId', 'champion', 'platformId', 'season', 'queue', 'role', 'timestamp'];
-                let options = {queue: 420};
+                let options = {queue: 'TEAM_BUILDER_RANKED_SOLO'};
                 let maxNumRecent = 20;
                 
                 riotAPI.getMatchHistory(playerID, true, options, function(error, data) {
