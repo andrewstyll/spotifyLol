@@ -2,14 +2,18 @@ const mongoose = require('mongoose');
 
 function setURL() {
     let mongoURL;
-    if(process.env.NODE_ENV == 'test') {
+    if(process.env.NODE_ENV == 'test' || process.env.NODE_ENV == 'dev') {
         mongoURL = process.env.TEST_DB_URL;
     } else {
         mongoURL = process.env.DEV_DB_CREDENTIALS + process.env.DEV_DB_URL;
     }
     return mongoURL;
 }
+
 const mongoURI = "mongodb://" + setURL();
+
+// seed DB somehow. i don't want it done manually
+// I want to launch the DB, seed it, connect to it and view the outcome of my testing.
 
 // Only have one connection so use .connect
 mongoose.connect(mongoURI);

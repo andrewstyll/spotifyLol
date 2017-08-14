@@ -47,7 +47,7 @@ riotAPI.getMatchHistory = function(accountID, recent, options, callBack, priorit
     let apiRequest = API.MATCH_BY_ACC_ID + accountID + matchHistoryTag;
 
     let url = utils.makeURL(region, apiRequest, options);
-    
+    console.log(url);    
     // now make a request
     utils.makeRequest(priority, url, callBack);
 }

@@ -9,4 +9,4 @@ const matchHistory = new Schema({
 });
 
 // add summoner model to the mongoose object. Allows this model to be accessed via the mongoose object.
-const MatchHistory = mongoose.model('MatchListData', matchHistory);
+const MatchHistory = mongoose.model('MatchHistory', matchHistory);

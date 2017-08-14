@@ -49,9 +49,7 @@ apiUtils.makeRequest = function(priority, url, callBack){
  * @return {String}: returns a string that will be appeneded to the URL string
  */
 apiUtils.checkOption = function(key, value, obj) {
-    console.log(obj);
     if(obj.hasOwnProperty(key) && OPTIONS.hasOwnProperty(key) && OPTIONS[key].hasOwnProperty(value)) {    
-        console.log("HI");
         return key.toString() + '=' + OPTIONS[key][value] + '&';
     } else {
         return "";
@@ -80,16 +78,11 @@ apiUtils.makeURL = function(region, apiRequest, optionsObj) {
             } else {
                 options += apiUtils.checkOption(key, value, optionsObj);
             }
-            // this checks if the value is valid, if it is, it adds it. This can work for arrays and 
-            //if(optionsObj.hasOwnProperty(key) && OPTIONS.hasOwnProperty(key) && OPTIONS[key].hasOwnProperty(value)) {    
-            //    options += key.toString() + '=' + OPTIONS[key][value] + '&';
-            //}
         }
     }
 
     let url = HTTPS + region + HOST + apiRequest + options + KEY;
 
-    console.log(url);
     return url;
 }
 

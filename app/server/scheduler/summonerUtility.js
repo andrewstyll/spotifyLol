@@ -43,7 +43,7 @@ summonerUtils.saveSummoner = function(summoner, callBack) {
     summoner.save(callBack);
 }
 
-/* checks to see if a summoner already exists in the database
+/* checks to see if a summoner object already exists in the database
  * @params {Object} summoner: summoner to check in DB for
  * @params {Function} callBack: callback to be executed on completion of find operation. If non-error field != null, the
  * summoner already exists
