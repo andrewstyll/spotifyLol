@@ -42,11 +42,11 @@ describe('riotAPI wrapper tests', function() {
         }
 
         describe('summonerName call', function() {
-            it('returned data object has correct keys, or throws valid error', function(done) {
+            it('returned data object has correct keys, or throws valid error PASS IN STRING', function(done) {
                 
                 let keys = ['profileIconId', 'name', 'summonerLevel', 'revisionDate', 'id', 'accountId'];
                 let summoner = 'rastamonke';
-                riotAPI.getSummonerInfoByName(summoner, function(error, data) {
+                riotAPI.getSummonerInfo(summoner, function(error, data) {
                     if(error) {
                         expect(checkValidError(error)).to.be.true;
                         expect(data).to.be.null;
@@ -54,6 +54,23 @@ describe('riotAPI wrapper tests', function() {
                         expect(error).to.be.null;
                         expect(data).to.include.all.keys(keys); 
                         expect(data.name).to.equal(summoner);
+                    }
+                    done();
+                });
+            });   
+            
+            it('returned data object has correct keys, or throws valid error PASS IN INTEGER', function(done) {
+                
+                let keys = ['profileIconId', 'name', 'summonerLevel', 'revisionDate', 'id', 'accountId'];
+                let summoner = 35488264;
+                riotAPI.getSummonerInfo(summoner, function(error, data) {
+                    if(error) {
+                        expect(checkValidError(error)).to.be.true;
+                        expect(data).to.be.null;
+                    } else {
+                        expect(error).to.be.null;
+                        expect(data).to.include.all.keys(keys); 
+                        expect(data.accountId).to.equal(summoner);
                     }
                     done();
                 });

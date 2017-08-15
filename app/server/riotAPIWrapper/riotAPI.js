@@ -13,16 +13,23 @@ riotAPI.initAPIWrapper = function() {
 }
 
 /* callback invoked after api call for summoner info, call made by summoner name
- * @param {string} summName: string contaning summoner name 
- * @param {function} callBack: function to be executed on return of data
+ * @param {String/Integer} summName: string contaning summoner name OR Integer containing accountId
+ * @param {Function} callBack: function to be executed on return of data
  * @param {Integer} priority: priority rating for the request
  * @callback {Object}: takes match summoner data or error data params
  */
-riotAPI.getSummonerInfoByName = function(summName, callBack, priority = REQ_PRIORITY.BCKGRND, region = CONST.REGION.NA) {
-    
-    let apiRequest = API.SUMMONER_BY_NAME + summName;
-    
+riotAPI.getSummonerInfo = function(summoner, callBack, priority = REQ_PRIORITY.BCKGRND, region = CONST.REGION.NA) {
+   
+    let apiRequest;
+
+    if(typeof summoner === 'string') {
+        apiRequest = API.SUMMONER_BY_NAME + summoner;
+    } else {
+        apiRequest = API.SUMMONER_BY_ACCOUNT + summoner;        
+    }
+
     let url = utils.makeURL(region, apiRequest, null);
+    
     // now make a request
     utils.makeRequest(priority, url, callBack);
 }
@@ -47,7 +54,7 @@ riotAPI.getMatchHistory = function(accountID, recent, options, callBack, priorit
     let apiRequest = API.MATCH_BY_ACC_ID + accountID + matchHistoryTag;
 
     let url = utils.makeURL(region, apiRequest, options);
-    console.log(url);    
+    
     // now make a request
     utils.makeRequest(priority, url, callBack);
 }

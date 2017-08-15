@@ -24,7 +24,8 @@ const REGION = {
 
 const API_CALL = {
     SUMMONER_BY_NAME: '/lol/summoner/v3/summoners/by-name/', // {summonerName}
-    
+    SUMMONER_BY_ACCOUNT: '/lol/summoner/v3/summoners/by-account/', // {accountId} 
+
     // also reused for recent matches. needs a recent appended for recent matched after accountID
     MATCH_BY_ACC_ID: '/lol/match/v3/matchlists/by-account/', //{accountID} /recent
     MATCH_BY_MATCH_ID: '/lol/match/v3/matches/', //{match-ID}
