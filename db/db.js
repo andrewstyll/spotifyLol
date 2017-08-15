@@ -32,10 +32,23 @@ db.on('disconnected', function () {
 
 // close mongoDB connection if app is exiting
 function cleanUp() {  
-    db.close(function () {
-        console.log('Mongoose default connection disconnected through app termination'); 
-        process.exit(0); 
-    }); 
+    if(process.env.NODE_ENV == 'dev') {
+        mongoose.connection.db.dropDatabase(function(err, result) {
+            if(err) {
+                console.log(err);
+            } else {
+                db.close(function () {
+                    console.log('Mongoose default connection disconnected through app termination'); 
+                    process.exit(0); 
+                }); 
+            }
+        });
+    } else {
+        db.close(function () {
+            console.log('Mongoose default connection disconnected through app termination'); 
+            process.exit(0); 
+        }); 
+    }
 } 
 
 // linux exit codes that will invoke clean-up
