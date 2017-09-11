@@ -5,10 +5,11 @@ const Summoner = mongoose.model('Summoner');
 summonerUtils = {}
 
 /* returns todays date in dd/mm/yyyy format
+ * @params {Object} date: generic Date object
  * @return {String}: returns todays date in dd/mm/yyy format
  */
-summonerUtils.getTodaysDate = function() {
-    let date = new Date();
+summonerUtils.getNewDate = function(date) {
+
     let day = date.getDate(); // returns day of the month (0-31)
     let month = date.getMonth()+1; // returns month (0-11)
     let year = date.getFullYear();
@@ -45,8 +46,8 @@ summonerUtils.saveSummoner = function(summoner, callBack) {
 
 /* checks to see if a summoner object already exists in the database
  * @params {Object} summoner: summoner to check in DB for
- * @params {Function} callBack: callback to be executed on completion of find operation. If non-error field != null, the
- * summoner already exists
+ * @params {Function} callBack: callback to be executed on completion of find operation. If non-error field.length ==
+ * true, then the summoner already exists
  */
 summonerUtils.checkSummonerExists = function(summoner, callBack) {
     Summoner.find({'accountId': summoner.accountId}, callBack);   
@@ -77,7 +78,7 @@ summonerUtils.updateSummoner = function(summoner, params, callBack) {
  */
 summonerUtils.getTodaysSummoners = function(callBack) {
     // get all summoners that have their updateScheduled field matching todays date.
-    let today = summonerUtils.getTodaysDate();
+    let today = summonerUtils.getNewDate(new Date());
     
     Summoner.find({'updateScheduled': today}, 'accountId revisionDate', callBack);
 }

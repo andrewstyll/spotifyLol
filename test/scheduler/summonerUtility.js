@@ -4,20 +4,20 @@ const summUtils = require('./../../app/server/scheduler/summonerUtility');
 const expect = require('chai').expect;
 
 describe('summonerUtility tests', function() {
-    describe('getTodaysDate call', function() {
+    describe('getNewDate call', function() {
         it('should produce the correctly formatted date of today (dd/mm/yyy)', function() {
             let date = new Date();
             let day = date.getDate();
             let month = date.getMonth()+1;
             let year = date.getFullYear();
             
-            let todaysDate = summUtils.getTodaysDate(); 
+            let todaysDate = summUtils.getNewDate(date); 
             
             expect(todaysDate).to.equal(day + '/' + month + '/' + year);
         }); 
     });
-
-    let date = summUtils.getTodaysDate();
+    
+    let date = summUtils.getNewDate(new Date());
 
     let newSummoner = {
         "profileIconId": 1265,

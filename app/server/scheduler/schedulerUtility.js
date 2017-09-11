@@ -9,4 +9,12 @@ schedUtils.makeMatchHistoryOptions = function(season, queue, beginTime) {
     return options;
 }
 
+/* This function should (given the date last updated, and the number of matches returned) estimate when next to look up
+ * the summoner based on when they will next have 15 completed games.
+ * 
+ */
+schedUtils.setNextUpdateTime = function() {
+     
+}
+
 module.exports = schedUtils;
