@@ -37,6 +37,7 @@ const API_CALL = {
 };
 
 const REQ_PRIORITY = {
+    CONFIG_REQ: 0,
     USER_REQ: 1,
     USER_REQ_RETRANS: 2,
     BCKGRND: 3,

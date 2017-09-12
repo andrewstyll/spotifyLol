@@ -4,9 +4,14 @@ const OPTIONS = require('./../../app/server/riotAPIWrapper/constants/requestOpti
 
 const expect = require('chai').expect;
 
-riotAPI.initAPIWrapper();
 
 describe('riotAPI wrapper tests', function() {
+    before(function(done) {
+        riotAPI.initAPIWrapper(process.env.SEED_NAME, function() {
+            done();  
+        });
+    });
+
     describe('apiUtils tests', function() {
         describe('makeURL call', function() {
             it('accepts only valid request options into URL builder', function() {
@@ -46,7 +51,7 @@ describe('riotAPI wrapper tests', function() {
                 
                 let keys = ['profileIconId', 'name', 'summonerLevel', 'revisionDate', 'id', 'accountId'];
                 let summoner = 'rastamonke';
-                riotAPI.getSummonerInfo(summoner, function(error, data) {
+                riotAPI.getSummonerInfo(summoner, function(error, response, data) {
                     if(error) {
                         expect(checkValidError(error)).to.be.true;
                         expect(data).to.be.null;
@@ -63,7 +68,7 @@ describe('riotAPI wrapper tests', function() {
                 
                 let keys = ['profileIconId', 'name', 'summonerLevel', 'revisionDate', 'id', 'accountId'];
                 let summoner = 35488264;
-                riotAPI.getSummonerInfo(summoner, function(error, data) {
+                riotAPI.getSummonerInfo(summoner, function(error, response, data) {
                     if(error) {
                         expect(checkValidError(error)).to.be.true;
                         expect(data).to.be.null;
@@ -86,7 +91,7 @@ describe('riotAPI wrapper tests', function() {
                 let options = {queue: 'TEAM_BUILDER_RANKED_SOLO'};
                 let maxNumRecent = 20;
 
-                riotAPI.getMatchHistory(playerID, false, options, function(error, data) {
+                riotAPI.getMatchHistory(playerID, false, options, function(error, response, data) {
                     if(error) {
                         expect(checkValidError(error)).to.be.true;
                         expect(data).to.be.null;
@@ -108,7 +113,7 @@ describe('riotAPI wrapper tests', function() {
                 let options = {queue: 'TEAM_BUILDER_RANKED_SOLO'};
                 let maxNumRecent = 20;
                 
-                riotAPI.getMatchHistory(playerID, true, options, function(error, data) {
+                riotAPI.getMatchHistory(playerID, true, options, function(error, response, data) {
                     if(error) {
                         expect(checkValidError(error)).to.be.true;
                         expect(data).to.be.null;
@@ -136,7 +141,7 @@ describe('riotAPI wrapper tests', function() {
                 let playerKeys = ['currentPlatformId', 'summonerName', 'matchHistoryUri', 'platformId', 
                                     'currentAccountId', 'profileIcon', 'summonerId', 'accountId'];
 
-                riotAPI.getMatchData(matchID, function(error, data) {
+                riotAPI.getMatchData(matchID, function(error, response, data) {
                     
                     if(error) {
                         expect(checkValidError(error)).to.be.true;
@@ -159,7 +164,7 @@ describe('riotAPI wrapper tests', function() {
                 let mainKeys = ['gameId', 'gameStartTime', 'platformId', 'gameMode', 'mapId', 
                                 'gameType', 'gameQueueConfigId', 'observers', 'participants'];
 
-                riotAPI.getCurrentGameBySummID(summonerID, function(error, data) {
+                riotAPI.getCurrentGameBySummID(summonerID, function(error, response, data) {
                     if(error) {
                         expect(checkValidError(error)).to.be.true
                         expect(data).to.be.null;
@@ -177,7 +182,7 @@ describe('riotAPI wrapper tests', function() {
                
                 let mainKeys = ['data', 'version', 'type'];
 
-                riotAPI.getProfileIcons(function(error, data) {
+                riotAPI.getProfileIcons(function(error, response, data) {
                     if(error) {
                         expect(checkValidError(error)).to.be.true
                         expect(data).to.be.null;
@@ -195,7 +200,7 @@ describe('riotAPI wrapper tests', function() {
                
                 let mainKeys = ['type', 'version', 'data'];
 
-                riotAPI.getChampionInfo(function(error, data) {
+                riotAPI.getChampionInfo(function(error, response, data) {
                     if(error) {
                         expect(checkValidError(error)).to.be.true
                         expect(data).to.be.null;

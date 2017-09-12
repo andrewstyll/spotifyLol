@@ -2,13 +2,15 @@ const TokenBucket = require('./tokenBucket');
 const PriorityQueue = require('../../../utils/priorityQueue');
 
 /* Constructor for RateLimiter object
+ * @param {Integer} startingPoint: starting point for number of calls available to the bucket
  * @param {Integer} ratePerInterval: number of calls to be made across each interval
  * @param {Integer} interval: length of interval that rate applies to in milliseconds
  */
-const RateLimiter = function(ratePerInterval, interval) {
+const RateLimiter = function(startingPoint, ratePerInterval, interval) {
     // init bucket and bucket queue
-    this.bucket = new TokenBucket(ratePerInterval, interval);
+    this.bucket = new TokenBucket(startingPoint, ratePerInterval, interval);
     this.reqQueue = new PriorityQueue();
+    this.lastReq = new Date().getTime();
 }
 
 /* request scheduler for the rate limiter. Will check tokenBucket to see if request can be executed. If not, will
@@ -25,8 +27,8 @@ RateLimiter.prototype.scheduleRequest = function(priority, req) {
         this.reqQueue.enqueue(priority, req);
     }
 
-    if(this.bucket.getDropCount() > 0) { // if I have drops to make requests with
-        if(this.reqQueue.getSize() !== 0) { // if a request exists for me to execute
+    if(this.reqQueue.getSize() !== 0) { // if a request exists for me to execute
+        if(this.bucket.getDropCount() > 0) { // if I have drops to make requests with
             if(this.bucket.removeDrop()) { // remove a drop from the bucket
                 
                 let fn = this.reqQueue.dequeue();

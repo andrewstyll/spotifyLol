@@ -8,15 +8,33 @@ const REQ_PRIORITY = CONST.REQ_PRIORITY;
 
 let riotAPI = {};
 
-riotAPI.initAPIWrapper = function() {
-    utils.initRateLimiters();
+/* initiates the riot games API wrapper
+ * @param {String}: takes in a summoner name to send a seed request to determine the current API rate limit from the
+ * header
+ * @param {Function}: callback to be executed upong successful instantiation of the API wrapper
+ * @callback {Object}: will initiate either a test sequence or a data crawler
+ */
+riotAPI.initAPIWrapper = function(summonerName, callBack) {
+    if(summonerName) {
+        riotAPI.getSummonerInfo(summonerName, function(error, response, body) {
+            if(error) {
+                console.log('Error initializing API: ' + error.errorResponse + ' ' + error.message);
+            } else {
+                let rateLimits = response.headers['x-app-rate-limit-count'].split(/:|,/);
+                utils.initRateLimiters(Number(rateLimits[0]), Number(rateLimits[2]));
+                callBack();
+            }
+        }, REQ_PRIORITY.CONFIG_REQ);
+    } else {
+        utils.initRateLimiters();
+    }
 }
 
 /* callback invoked after api call for summoner info, call made by summoner name
  * @param {String/Integer} summName: string contaning summoner name OR Integer containing accountId
  * @param {Function} callBack: function to be executed on return of data
  * @param {Integer} priority: priority rating for the request
- * @callback {Object}: takes match summoner data or error data params
+ * @callback {Object}: takes match summoner data, response data or error data params
  */
 riotAPI.getSummonerInfo = function(summoner, callBack, priority = REQ_PRIORITY.BCKGRND, region = CONST.REGION.NA) {
    
@@ -40,7 +58,7 @@ riotAPI.getSummonerInfo = function(summoner, callBack, priority = REQ_PRIORITY.B
  * @param {Object} options: contains a list of all options to be included in the API request
  * @param {function} callBack: function to be executed on return of data
  * @param {Integer} priority: priority rating for the request
- * @callback {Object}: takes match history data or error data params
+ * @callback {Object}: takes match history data, response data or error data params
  */
 riotAPI.getMatchHistory = function(accountID, recent, options, callBack, priority = REQ_PRIORITY.BCKGRND, region = CONST.REGION.NA) {
     
@@ -63,7 +81,7 @@ riotAPI.getMatchHistory = function(accountID, recent, options, callBack, priorit
  * @param {long} matchID: long int contaning match ID 
  * @param {function} callBack: function to be executed on return of data
  * @param {Integer} priority: priority rating for the request
- * @callback {Object}: takes match data or error data params
+ * @callback {Object}: takes match data, response data or error data params
  */
 riotAPI.getMatchData = function(matchID, callBack, priority = REQ_PRIORITY.BCKGRND, region = CONST.REGION.NA) {
     
@@ -79,7 +97,7 @@ riotAPI.getMatchData = function(matchID, callBack, priority = REQ_PRIORITY.BCKGR
  * @param {long} summonerID: long int contaning summonerID 
  * @param {function} callBack: function to be executed on return of data
  * @param {Integer} priority: priority rating for the request
- * @callback {Object}: takes match summoner data or error data params
+ * @callback {Object}: takes match summoner data, response info or error data params
  */
 riotAPI.getCurrentGameBySummID = function(summonerID, callBack, priority = REQ_PRIORITY.BCKGRND, region = CONST.REGION.NA) {
     
@@ -93,7 +111,7 @@ riotAPI.getCurrentGameBySummID = function(summonerID, callBack, priority = REQ_P
 /* callback invoked after api call for profile icon files. STATIC DATA
  * @param {function} callBack: function to be executed on return of data
  * @param {Integer} priority: priority rating for the request
- * @callback {Object}: takes match profile icon data or error data
+ * @callback {Object}: takes match profile icon data, response info,  or error data
  */
 riotAPI.getProfileIcons = function(callBack, priority = REQ_PRIORITY.BCKGRND, region = CONST.REGION.NA) {
     
@@ -108,7 +126,7 @@ riotAPI.getProfileIcons = function(callBack, priority = REQ_PRIORITY.BCKGRND, re
 /* callback invoked after api call for champion info. STATIC DATA
  * @param {function} callBack: function to be executed on return of data
  * @param {Integer} priority: priority rating for the request
- * @callback {Object}: takes match champion info or error data
+ * @callback {Object}: takes match champion info, response info, or error data
  */
 riotAPI.getChampionInfo = function(callBack, priority = REQ_PRIORITY.BCKGRND, region = CONST.REGION.NA) {
     let apiRequest = API.CHAMP_LIST;

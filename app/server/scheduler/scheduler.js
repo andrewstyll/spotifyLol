@@ -16,23 +16,27 @@ const defaults = {
 };
 
 // store the summoner info
-function handleSummonerInfo(error, summoner) {
+function handleSummonerInfo(error, response, summoner) {
     
-    let tomorrow = new Date();
-    // set the date to be equal to tomorrow
-    tomorrow.setDate(tomorrow+1);
-    let newSummoner = summUtils.createSummoner(summoner, summonerUtils.getNewDate(tomorrow))     
-    // store the new summmoner
-    summUtils.saveSummoner(newSummoner,function(error) {
-        if(error) {
-            console.log("Error adding new summoner: " + error);
-        }        
-    });
+    if(error) {
+        console.log('error in handleSummonerInfo: ' + error.errorResponse + ' ' + error.message );
+    } else {
+        let tomorrow = new Date();
+        // set the date to be equal to tomorrow
+        tomorrow.setDate(tomorrow+1);
+        let newSummoner = summUtils.createSummoner(summoner, summonerUtils.getNewDate(tomorrow))     
+        // store the new summmoner
+        summUtils.saveSummoner(newSummoner,function(error) {
+            if(error) {
+                console.log('Error adding new summoner: ' + error);
+            }        
+        });
+    }
 }
 
-function handleMatchData(error, matchData) {
+function handleMatchData(error, response, matchData) {
     if(error) {
-        console.log('error in handleMatchData: ' + error);
+        console.log('error in handleMatchData: ' + error.errorResponse + ' ' + error.message);
     } else {
         matchData.participantIdentities.forEach(function(participant) {
             summUtils.checkSummonerExists(participant.player, function(error, summoner) {
@@ -47,11 +51,11 @@ function handleMatchData(error, matchData) {
             });
         });
         
-        matchDataUtils.saveMatchData(matchData, function(error, matchData, numAffected) {
+        /*matchDataUtils.saveMatchData(matchData, function(error, matchData, numAffected) {
             if(error) {
                 console.log('error saving match data: ' + error);
             }
-        });
+        });*/
     }
 }
 
@@ -60,9 +64,9 @@ function handleMatchData(error, matchData) {
  * @param {Object} matchHistoryData: object containing match history data returned from api call
  * on success, callBack will check to see if each match returned has been looked up already to avoid repeat searches
  */
-function handleMatchHistory(error, matchHistoryData) {
+function handleMatchHistory(error, response, matchHistoryData) {
     if(error) {
-        console.log('error in handleMatchHistory');
+        console.log('error in handleMatchHistory: ' + error.errorResponse + ' ' + error.message);
         // potential retransmit here
     } else {
         // do something with the returning match history data 
@@ -81,7 +85,7 @@ function handleMatchHistory(error, matchHistoryData) {
                         }
                     }); 
                     let priority = REQ_PRIORITY.BCKGRND;
-                    riotAPI.getMatchData(newMatchHistory, handleMatchData, priority);
+                    riotAPI.getMatchData(newMatchHistory.gameId, handleMatchData, priority);
                 }
             });
         });
@@ -116,9 +120,9 @@ function iterateOverSummoners(error, summoners) {
  */
 function seedDB() {
 
-    riotAPI.getSummonerInfo('rastamonke', function(error, summoner) {
+    riotAPI.getSummonerInfo(process.env.SEED_NAME, function(error, response, summoner) {
         if(error) {
-            console.log("Error looking up seed user: " + error);
+            console.log("Error looking up seed user: " + error.errorResponse + ' ' + error.message);
         } else {
             let date = new Date();
             let newSummoner = summUtils.createSummoner(summoner, summUtils.getNewDate(date));
@@ -137,13 +141,15 @@ function seedDB() {
  */
 scheduler.start = function() {
 
-    riotAPI.initAPIWrapper();
+    riotAPI.initAPIWrapper(process.env.SEED_NAME, function() {
+        
+        if(process.env.NODE_ENV === 'dev') {
+            seedDB();
+        } else {
+            scheduler.startCrawl();
+        }
+    });
 
-    if(process.env.NODE_ENV === 'dev') {
-        seedDB();
-    } else {
-        scheduler.startCrawl();
-    }
 }
 
 /* my scheduler init function. starts the process by getting the the list of all summoners that are to have their data

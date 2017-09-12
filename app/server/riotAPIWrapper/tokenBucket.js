@@ -1,15 +1,15 @@
 /* constructor for the token bucket object
+ * @param {Integar} startingDrops: number of drops to start out in bucket
  * @param {Integer} ratePerInterval: number of calls to be made across each interval
  * @param {Integer} interval: length of interval that rate applies to in milliseconds
  */
-const TokenBucket = function (ratePerInterval, interval) {
+const TokenBucket = function (startingDrops, ratePerInterval, interval) {
     // ratePerInterval = req/interval, interval = milliseconds
     
     this.bucketSize = ratePerInterval; // the maximum number of tokens I want to allow in my bucket at once
     this.rateLimit = ratePerInterval/interval; 
-
     this.interval = interval; // will be 1 second and 2 minutes for the devKey rates
-    this.dropCount = this.bucketSize; // number of tokens (or drops) currently in the bucket
+    this.dropCount = startingDrops; // number of tokens (or drops) currently in the bucket
 
     // This is in milliseconds
     this.lastDrip = new Date().getTime();
@@ -26,7 +26,7 @@ TokenBucket.prototype.drip = function () {
 
     //check how much time has passed since the last drip in milliseconds
     let currentTime = new Date().getTime();
-    let deltaTime = currentTime-this.lastDrip;
+    let deltaTime = currentTime-this.lastDrip;//, 1/this.rateLimit;
     
     // how many tokens should I add based on how much time has passed (remember, this can't be called exactly at perfect
     // intervals, so I'll need to account for this being called late)
@@ -35,7 +35,7 @@ TokenBucket.prototype.drip = function () {
         this.lastDrip = currentTime;
         this.dropCount = Math.min(tokensToAdd + this.dropCount, this.bucketSize);
     }
-    
+     
     setTimeout(function() {
         that.drip();   
     }, 1/this.rateLimit);
@@ -49,6 +49,7 @@ TokenBucket.prototype.removeDrop = function() {
     // if we have drops to give in the bucket
     if(this.dropCount > 0) {
         this.dropCount--;
+        console.log('Drop Count: ' + this.dropCount);
         return true;
     } else {
         return false;
