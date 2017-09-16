@@ -19,6 +19,7 @@ const defaults = {
 function handleSummonerInfo(error, response, summoner) {
     
     if(error) {
+        // purpose of printing out the error for logging purposes
         console.log('error in handleSummonerInfo: ' + error.errorResponse + ' ' + error.message );
     } else {
         let tomorrow = new Date();
@@ -36,6 +37,7 @@ function handleSummonerInfo(error, response, summoner) {
 
 function handleMatchData(error, response, matchData) {
     if(error) {
+        // purpose of printing out the error for logging purposes
         console.log('error in handleMatchData: ' + error.errorResponse + ' ' + error.message);
     } else {
         matchData.participantIdentities.forEach(function(participant) {
@@ -61,13 +63,14 @@ function handleMatchData(error, response, matchData) {
 
 /* callback called when returning from a call to lookup match history data
  * @param {Error} error: error that willbe thrown if async call is unsuccessful
+ * @param {Response} response: HTTP response header object
  * @param {Object} matchHistoryData: object containing match history data returned from api call
  * on success, callBack will check to see if each match returned has been looked up already to avoid repeat searches
  */
 function handleMatchHistory(error, response, matchHistoryData) {
     if(error) {
+        // purpose of printing out the error for logging purposes
         console.log('error in handleMatchHistory: ' + error.errorResponse + ' ' + error.message);
-        // potential retransmit here
     } else {
         // do something with the returning match history data 
         matchHistoryData.matches.forEach(function(matchHistory) {
@@ -137,10 +140,18 @@ function seedDB() {
     });      
 }
 
+/* my scheduler init function. starts the process by getting the the list of all summoners that are to have their data
+ * updated today.
+ * TODO:: automate this to be performed once every day
+ */
+scheduler.startCrawl = function() {
+    
+    summUtils.getTodaysSummoners(iterateOverSummoners);
+}
+
 /* the initialisation function of my scheduler. Initialises the riotAPI and starts the scheduler crawl as well
  */
 scheduler.start = function() {
-
     riotAPI.initAPIWrapper(process.env.SEED_NAME, function() {
         
         if(process.env.NODE_ENV === 'dev') {
@@ -149,16 +160,6 @@ scheduler.start = function() {
             scheduler.startCrawl();
         }
     });
-
-}
-
-/* my scheduler init function. starts the process by getting the the list of all summoners that are to have their data
- * updated today.
- * TODO:: automate this to be performed once every day
- */
-scheduler.startCrawl = function() {
-    
-    summUtils.getTodaysSummoners(iterateOverSummoners);
 }
 
 module.exports = scheduler;

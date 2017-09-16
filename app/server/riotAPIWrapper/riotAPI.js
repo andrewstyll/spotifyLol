@@ -20,8 +20,7 @@ riotAPI.initAPIWrapper = function(summonerName, callBack) {
             if(error) {
                 console.log('Error initializing API: ' + error.errorResponse + ' ' + error.message);
             } else {
-                let rateLimits = response.headers['x-app-rate-limit-count'].split(/:|,/);
-                utils.initRateLimiters(Number(rateLimits[0]), Number(rateLimits[2]));
+                utils.initRateLimiters();
                 callBack();
             }
         }, REQ_PRIORITY.CONFIG_REQ);

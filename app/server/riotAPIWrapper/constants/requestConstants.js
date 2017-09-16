@@ -19,7 +19,7 @@ const REGION = {
     NA:'NA1',
     OCEANIA: 'OC1',
     TURKEY: 'TR1',
-    RUSSIA: 'RU',
+    RUSSIA: 'RU'
 };
 
 const API_CALL = {
@@ -38,10 +38,16 @@ const API_CALL = {
 
 const REQ_PRIORITY = {
     CONFIG_REQ: 0,
-    USER_REQ: 1,
-    USER_REQ_RETRANS: 2,
-    BCKGRND: 3,
-    BCKGRND_RETRANS: 4,
+    USER_REQ_RETRANS: 1,
+    USER_REQ: 2,
+    BCKGRND_RETRANS: 3,
+    BCKGRND: 4
+};
+
+// retransmission times for errors in milliseconds
+const REQ_RETRANS = {
+    429: 5000, // five seconds
+    500: 600000
 };
 
 module.exports = {
@@ -50,5 +56,6 @@ module.exports = {
     HOST,
     REGION,
     API_CALL,
-    REQ_PRIORITY
+    REQ_PRIORITY,
+    REQ_RETRANS
 };

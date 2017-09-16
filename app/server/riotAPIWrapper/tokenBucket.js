@@ -1,15 +1,14 @@
 /* constructor for the token bucket object
- * @param {Integar} startingDrops: number of drops to start out in bucket
  * @param {Integer} ratePerInterval: number of calls to be made across each interval
  * @param {Integer} interval: length of interval that rate applies to in milliseconds
  */
-const TokenBucket = function (startingDrops, ratePerInterval, interval) {
+const TokenBucket = function (ratePerInterval, interval) {
     // ratePerInterval = req/interval, interval = milliseconds
     
     this.bucketSize = ratePerInterval; // the maximum number of tokens I want to allow in my bucket at once
     this.rateLimit = ratePerInterval/interval; 
     this.interval = interval; // will be 1 second and 2 minutes for the devKey rates
-    this.dropCount = startingDrops; // number of tokens (or drops) currently in the bucket
+    this.dropCount = 0;//startingDrops; // number of tokens (or drops) currently in the bucket
 
     // This is in milliseconds
     this.lastDrip = new Date().getTime();
@@ -49,7 +48,6 @@ TokenBucket.prototype.removeDrop = function() {
     // if we have drops to give in the bucket
     if(this.dropCount > 0) {
         this.dropCount--;
-        console.log('Drop Count: ' + this.dropCount);
         return true;
     } else {
         return false;
@@ -61,6 +59,12 @@ TokenBucket.prototype.removeDrop = function() {
  */
 TokenBucket.prototype.getDropCount = function() {
     return this.dropCount;
+}
+
+/* performs exponential backoff algorithm, halving drip rate every time it is called
+ */
+TokenBucket.prototype.dripRateBackoff = function() {
+    this.rateLimit = this.rateLimit/2;   
 }
 
 module.exports = TokenBucket;
